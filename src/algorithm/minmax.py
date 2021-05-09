@@ -12,6 +12,7 @@ class MinMax:
     def __init__(self):
         self.moves = []
 
+    @lru_cache()
     def run(self, state: Board, depth, is_max, player):
         """
         Get next best or worst state for given state depending on specified parameters.
@@ -25,29 +26,29 @@ class MinMax:
         if depth == 0 or state.no_more_moves():
             return False, state
         additional_move = False
-        bb = state
+        best_board = state
         moves = self.calculate_possible_states(state, player)
         MinMax.moves_count += len(moves)
         if is_max:
             value = -float('inf')
-            for am, move in moves:
-                if am:
+            for add_move, move in moves:
+                if add_move:
                     _, deep_state = self.run(move, depth - 1, True, player)
                 else:
                     _, deep_state = self.run(move, depth - 1, False, player.next())
-                if nv := Evaluator.rate_board_state(deep_state, player) > value:
-                    additional_move, value, bb = am, nv, move
-            return additional_move, bb
+                if new_value := Evaluator.rate_board_state(deep_state, player) > value:
+                    additional_move, value, best_board = add_move, new_value, move
+            return additional_move, best_board
         else:
             value = float('inf')
-            for am, move in moves:
-                if am:
+            for add_move, move in moves:
+                if add_move:
                     _, deep_state = self.run(move, depth - 1, False, player)
                 else:
                     _, deep_state = self.run(move, depth - 1, True, player.next())
-                if nv := Evaluator.rate_board_state(deep_state, player) < value:
-                    additional_move, value, bb = am, nv, move
-            return additional_move, bb
+                if new_value := Evaluator.rate_board_state(deep_state, player) < value:
+                    additional_move, value, best_board = add_move, new_value, move
+            return additional_move, best_board
 
     @staticmethod
     def calculate_possible_states(state: Board, player: Player):

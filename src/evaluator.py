@@ -14,6 +14,11 @@ class Evaluator:
         :return: Number of beans in the given player pit.
         """
         if player is Player.A:
-            return board.get_state()[board.playerA_pit_index]
+            return board.get_state()[board.playerA_pit_index] - board.get_state()[board.playerB_pit_index]
         else:
-            return board.get_state()[board.playerB_pit_index]
+            return board.get_state()[board.playerB_pit_index] - board.get_state()[board.playerA_pit_index]
+
+        # if player is Player.A:
+        #     return board.get_state()[board.playerA_pit_index] - board.get_state()[board.playerB_pit_index]
+        # else:
+        #     return board.get_state()[board.playerB_pit_index] - board.get_state()[board.playerA_pit_index]
