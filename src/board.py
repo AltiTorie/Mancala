@@ -1,4 +1,5 @@
 import logging as log
+import pickle
 
 from src.player import Player
 
@@ -6,9 +7,8 @@ from src.player import Player
 class Board:
     def __init__(self, beans_per_pit: int = 6, print_state_after_move=True):
         """
-
-        :param beans_per_pit:
-        :param print_state_after_move:
+        :param beans_per_pit: how many beans should be in each pit
+        :param print_state_after_move: if this is True board state will be printed after every move
         """
         self.pits = [beans_per_pit] * ((6 + 1) * 2)
         self.pits_len = len(self.pits)
@@ -18,9 +18,18 @@ class Board:
         self.pits[self.playerB_pit_index] = 0
         self.print_after_move = print_state_after_move
 
+    def get_state(self):
+        """
+        :return: current board state
+        """
+        return self.pits
+
+    def deep_copy(self):
+        return pickle.loads(pickle.dumps(self))
+
     def print_state(self):
         """
-        Prints current state of the board.
+        Print current state of the board.
 
         """
         place = [str(i).center(5) for i in self.pits]
@@ -41,7 +50,7 @@ class Board:
 
     def spread_beans(self, starting_pit: int, player: Player):
         """
-        Spreads beans from given pit to subsequent pits.
+        Spread beans from given pit to subsequent pits.
 
         :param player: current player
         :param starting_pit: index of pit form which beans will be spread.
@@ -55,12 +64,14 @@ class Board:
             raise ValueError("You can only move beans from your pits")
         if player == Player.B and starting_pit <= self.playerA_pit_index:
             raise ValueError("You can only move beans from your pits")
+
         beans_to_spread = self.pits[starting_pit]
         self.pits[starting_pit] = 0
         pos = starting_pit + 1
         last_pos = (starting_pit + beans_to_spread) % self.pits_len
         was_zero = self.pits[last_pos] == 0
-        log.info(f"Moving beans: {starting_pit} -> ... -> {last_pos}")
+        if self.print_after_move:
+            log.info(f"Moving beans: {starting_pit} -> ... -> {last_pos}")
         for index in range(pos, starting_pit + beans_to_spread + 1):
             self.pits[index % self.pits_len] += 1
 
@@ -71,13 +82,13 @@ class Board:
 
         if self.print_after_move:
             self.print_state()
-        if add_move:
-            log.info("Player has another move!")
+        # if add_move:
+        #     log.info("Player has another move!")
         return add_move
 
     def __should_steal(self, starting_pit, last_pit):
         """
-        Detects if last bean landed on empty players pit.
+        Detect if last bean landed on empty players pit.
 
         :param starting_pit: index of a pit from which started spreading
         :param last_pit: index of a pit where last bean landed
@@ -101,7 +112,7 @@ class Board:
         beans = self.pits[from_index]
         self.pits[from_index] = 0
         beans += self.pits[opposite]
-        log.info(f"stealing {beans} beans from {opposite} because {from_index} ")
+        # log.info(f"stealing {beans} beans from {opposite} because {from_index} ")
         self.pits[opposite] = 0
         self.pits[players_pit] += beans
 
@@ -148,3 +159,27 @@ class Board:
             if not any(player_pits):
                 return True
         return False
+
+    def clean_board(self):
+        """
+        Places every bean from "normal" pit to players store.
+        Possible to use only when there are no more moves possible.
+        """
+        if self.no_more_moves():
+            for pi in range(self.playerA_pit_index):
+                # log.info(f"{self.pits[self.playerA_pit_index]} += {self.pits[pi]}")
+                self.pits[self.playerA_pit_index] += self.pits[pi]
+                self.pits[pi] = 0
+            for pi in range(self.playerA_pit_index + 1, self.playerB_pit_index):
+                # log.info(f"{self.pits[self.playerB_pit_index]} += {self.pits[pi]}")
+                self.pits[self.playerB_pit_index] += self.pits[pi]
+                self.pits[pi] = 0
+
+    def winner(self):
+        """
+        Winner for the current state of the board
+        :return: Player who has more beans in his store
+        """
+        if self.pits[self.playerA_pit_index] > self.pits[self.playerB_pit_index]:
+            return Player.A
+        return Player.B
