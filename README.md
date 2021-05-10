@@ -50,7 +50,7 @@ Na chwilę obecną można zmiennymi parametrami są:
 
 ## Testy funkcjonalne
 Komputer potrafi wykryć następujące sytuacje (przy ustawionej odpowiedniej wartości depth):
-- Gracz B może ponownie wykonać ruch
+- Gracz B może ponownie wykonać ruch  
   ![](screen_shots/ponowny_ruch.png)
 
 - Możliwe jest bicie przez gracza B  
