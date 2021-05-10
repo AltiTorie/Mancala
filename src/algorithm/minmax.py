@@ -36,7 +36,7 @@ class MinMax:
                     _, deep_state = self.run(move, depth - 1, True, player)
                 else:
                     _, deep_state = self.run(move, depth - 1, False, player.next())
-                if new_value := Evaluator.rate_board_state(deep_state, player) > value:
+                if (new_value := Evaluator.rate_board_state(deep_state, player)) > value:
                     additional_move, value, best_board = add_move, new_value, move
             return additional_move, best_board
         else:
@@ -53,11 +53,12 @@ class MinMax:
     @staticmethod
     def calculate_possible_states(state: Board, player: Player):
         """
-        Find all possible moves for current `state` and `player`
+        Find all possible moves for current `state` and `player`. Each `move` contains information
+        whether there is an additional move for the player and the next state of the board after the move.
 
         :param state: State for which next moves will be calculated
         :param player: Player whose moves will be calculated
-        :return: All possible moves for given player
+        :return: List of all possible moves for given player
         """
         cp: Board = state.deep_copy()
         cp.print_after_move = False
