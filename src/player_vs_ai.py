@@ -8,14 +8,19 @@ from src.player import Player
 
 logging.basicConfig(level=logging.INFO)
 if __name__ == '__main__':
-    board = Board()
+    # Values for configuration:
+    depth = 6
+    beans_per_pit = 4
+    first_move_random = True
+    player = random.choice([p for p in Player])
+    # player = Player.A
+    # player = Player.B
+
+    board = Board(beans_per_pit=beans_per_pit)
     board.print_state()
     mm = MinMax()
-    # player = Player.A
-    player = random.choice([p for p in Player])
     start = time.time()
-    b_moves = []
-    depth = 6
+    moves = {Player.A: [], Player.B: []}
     while not board.no_more_moves():
 
         if player is Player.A:
