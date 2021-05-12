@@ -35,7 +35,7 @@ if __name__ == '__main__':
             board.print_state()
             if not am:
                 player = player.next()
-            b_moves.append(MinMax.moves_count)
+            moves[player].append(MinMax.moves_count)
         logging.info(MinMax.moves_count)
         MinMax.moves_count = 0
     board.clean_board()
@@ -43,6 +43,6 @@ if __name__ == '__main__':
 
     logging.info(f"The winner is player{board.winner()}")
     logging.info(f"The game took: {time.time()-start}")
-    logging.info(f'b_moves: {b_moves}')
-    plt.plot(b_moves)
+    logging.info(f'b_moves: {moves[Player.B]}')
+    plt.plot(moves[Player.B])
     plt.show()
