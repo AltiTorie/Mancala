@@ -27,7 +27,7 @@ class MinMax:
             return False, state
         additional_move = False
         best_board = state
-        moves = self.calculate_possible_states(state, player)
+        moves = state.calculate_possible_states(player)
         MinMax.moves_count += len(moves)
         if is_max:
             value = -float('inf')
@@ -50,29 +50,3 @@ class MinMax:
                     additional_move, value, best_board = add_move, new_value, move
             return additional_move, best_board
 
-    @staticmethod
-    def calculate_possible_states(state: Board, player: Player):
-        """
-        Find all possible moves for current `state` and `player`. Each `move` contains information
-        whether there is an additional move for the player and the next state of the board after the move.
-
-        :param state: State for which next moves will be calculated
-        :param player: Player whose moves will be calculated
-        :return: List of all possible moves for given player
-        """
-        cp: Board = state.deep_copy()
-        cp.print_after_move = False
-        moves = []
-        if player is Player.A:
-            for i, pit in enumerate(cp.pits[:cp.playerA_pit_index]):
-                next_move: Board = cp.deep_copy()
-                if pit > 0:
-                    am = next_move.spread_beans(i, player)
-                    moves.append((am, next_move))
-        else:
-            for i, pit in enumerate(cp.pits[cp.playerA_pit_index + 1:cp.playerB_pit_index]):
-                next_move = cp.deep_copy()
-                if pit > 0:
-                    am = next_move.spread_beans(i + cp.playerA_pit_index + 1, player)
-                    moves.append((am, next_move))
-        return moves

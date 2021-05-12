@@ -25,7 +25,7 @@ if __name__ == '__main__':
     moves = {Player.A: [], Player.B: []}
     # first move random
     if first_move_random:
-        am, board = random.choice(mm.calculate_possible_states(board, player))
+        am, board = random.choice(board.calculate_possible_states(player))
         board.print_state()
         if not am:
             player = player.next()
@@ -46,6 +46,6 @@ if __name__ == '__main__':
     logging.info(f"The game took: {time.time() - start}")
     logging.info(f'a_moves: {moves[Player.A]}')
     logging.info(f'b_moves: {moves[Player.B]}')
-    plt.plot(moves[Player.A])
-    plt.plot(moves[Player.B])
+    plt.plot(moves[Player.A], color='red', label='Checked A')
+    plt.plot(moves[Player.B], color='blue', label='Checked B')
     plt.show()
