@@ -178,14 +178,20 @@ class Board:
                 self.pits[self.playerB_pit_index] += self.pits[pi]
                 self.pits[pi] = 0
 
-    def winner(self):
+    def log_winner(self):
         """
         Winner for the current state of the board
         :return: Player who has more beans in his store
         """
         if self.pits[self.playerA_pit_index] > self.pits[self.playerB_pit_index]:
+            log.info(f"The winner is: {Player.A}")
             return Player.A
-        return Player.B
+        elif self.pits[self.playerA_pit_index] == self.pits[self.playerB_pit_index]:
+            log.info(f"It's a tie!")
+            return None
+        else:
+            log.info(f"The winner is: {Player.B}")
+            return Player.B
 
     def calculate_possible_states(self, player: Player):
         """

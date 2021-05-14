@@ -27,5 +27,5 @@ if __name__ == '__main__':
     board.clean_board()
     board.print_state()
 
-    logging.info(f"The winner is player{board.winner()}")
+    logging.info(f"The winner is player{board.log_winner()}")
     logging.info(f"The game took: {time.time() - start}")

@@ -4,6 +4,7 @@ import time
 
 import matplotlib.pyplot as plt
 
+from src.algorithm.alphabeta import AlphaBeta
 from src.algorithm.minmax import MinMax
 from src.board import Board
 from src.player import Player
@@ -20,29 +21,31 @@ if __name__ == '__main__':
 
     board = Board(beans_per_pit=beans_per_pit)
     board.print_state()
-    mm = MinMax()
+    algorithm = AlphaBeta()
+    # algorithm = MinMax()
     start = time.time()
     moves = {Player.A: [], Player.B: []}
     # first move random
     if first_move_random:
         am, board = random.choice(board.calculate_possible_states(player))
+        logging.info(f'Now moving: player{player}')
         board.print_state()
         if not am:
             player = player.next()
 
     while not board.no_more_moves():
         logging.info(f'Now moving: player{player}')
-        am, board = mm.run(board, depth, True, player)
+        am, board = algorithm.run(board, depth, True, player)
         board.print_state()
         if not am:
             player = player.next()
-        moves[player].append(MinMax.moves_count)
-        # logging.info(MinMax.moves_count)
-        MinMax.moves_count = 0
+        moves[player].append(algorithm.moves_count)
+        logging.info(algorithm.moves_count)
+        algorithm.moves_count = 0
     board.clean_board()
     board.print_state()
 
-    logging.info(f"The winner is player{board.winner()}")
+    board.log_winner()
     logging.info(f"The game took: {time.time() - start}")
     logging.info(f'a_moves: {moves[Player.A]}')
     logging.info(f'b_moves: {moves[Player.B]}')
