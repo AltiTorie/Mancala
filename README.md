@@ -43,7 +43,7 @@ Algorytm został zaimplementowany w pythonie 3.9.
 
 Konfiguracja odbywa się bezpośrednio w kodzie kontrolera rozgrywki.
 Na chwilę obecną można zmiennymi parametrami są:
-- beans_per_pit (fasolki na dołek) - domyślnie 6.
+- beans_per_pit (fasolki na dołek) - domyślnie 4.
 - depth (głębokość drzewa przeszukiwań) domyślnie 6.
 - first_move_random - czy pierwszy ruch komputera ma być losowy (dostępne tylko w trybie [komputer vs komputer](src/ai_vs_ai.py)).
 - player - pozwala na ustawienie losowego gracza rozpoczynającego lub na ustawienie wybranego.

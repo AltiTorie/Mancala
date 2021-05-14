@@ -18,6 +18,9 @@ class Board:
         self.pits[self.playerB_pit_index] = 0
         self.print_after_move = print_state_after_move
 
+    def __hash__(self) -> int:
+        return super().__hash__()
+
     def get_state(self):
         """
         :return: current board state
@@ -175,11 +178,42 @@ class Board:
                 self.pits[self.playerB_pit_index] += self.pits[pi]
                 self.pits[pi] = 0
 
-    def winner(self):
+    def log_winner(self):
         """
         Winner for the current state of the board
         :return: Player who has more beans in his store
         """
         if self.pits[self.playerA_pit_index] > self.pits[self.playerB_pit_index]:
+            log.info(f"The winner is: {Player.A}")
             return Player.A
-        return Player.B
+        elif self.pits[self.playerA_pit_index] == self.pits[self.playerB_pit_index]:
+            log.info(f"It's a tie!")
+            return None
+        else:
+            log.info(f"The winner is: {Player.B}")
+            return Player.B
+
+    def calculate_possible_states(self, player: Player):
+        """
+        Find all possible moves for given `player`. Each `move` contains information
+        whether there is an additional move for the player and the next state of the board after the move.
+
+        :param player: Player whose moves will be calculated
+        :return: List of all possible moves for given player
+        """
+        cp: Board = self.deep_copy()
+        cp.print_after_move = False
+        moves = []
+        if player is Player.A:
+            for i, pit in enumerate(cp.pits[:cp.playerA_pit_index]):
+                next_move: Board = cp.deep_copy()
+                if pit > 0:
+                    am = next_move.spread_beans(i, player)
+                    moves.append((am, next_move))
+        else:
+            for i, pit in enumerate(cp.pits[cp.playerA_pit_index + 1:cp.playerB_pit_index]):
+                next_move = cp.deep_copy()
+                if pit > 0:
+                    am = next_move.spread_beans(i + cp.playerA_pit_index + 1, player)
+                    moves.append((am, next_move))
+        return moves
