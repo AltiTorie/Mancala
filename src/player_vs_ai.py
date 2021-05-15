@@ -11,23 +11,25 @@ from src.player import Player
 logging.basicConfig(level=logging.INFO)
 if __name__ == '__main__':
     # Values for configuration:
+    ###
     depth = 6
     beans_per_pit = 4
     first_move_random = True
+    #
+    # choose player:
     player = random.choice([p for p in Player])
     # player = Player.A
     # player = Player.B
+    #
+    # choose algorithm:
+    algorithm = AlphaBeta()
+    # algorithm = MinMax()
+    ###
 
     board = Board(beans_per_pit=beans_per_pit)
     board.print_state()
-    algorithm = AlphaBeta()
     start = time.time()
     moves = {Player.A: [], Player.B: []}
-    ###
-    board.pits = [4, 1, 1, 0, 0, 5, 16, 4, 0, 0, 0, 0, 0, 17]
-    board.print_state()
-    player = Player.A
-    ###
     while not board.no_more_moves():
         time.sleep(0.4)
         if player is Player.A:

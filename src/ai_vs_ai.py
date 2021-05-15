@@ -15,14 +15,17 @@ if __name__ == '__main__':
     depth = 6
     beans_per_pit = 4
     first_move_random = True
+    # choose starting player:
     player = random.choice([p for p in Player])
     # player = Player.A
     # player = Player.B
+    #
+    # choose algorithm:
+    algorithm = AlphaBeta()
+    # algorithm = MinMax()
 
     board = Board(beans_per_pit=beans_per_pit)
     board.print_state()
-    algorithm = AlphaBeta()
-    # algorithm = MinMax()
     start = time.time()
     moves = {Player.A: [], Player.B: []}
     # first move random

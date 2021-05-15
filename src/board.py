@@ -85,8 +85,8 @@ class Board:
 
         if self.print_after_move:
             self.print_state()
-        # if add_move:
-        #     log.info("Player has another move!")
+            if add_move:
+                log.info("Player has another move!")
         return add_move
 
     def __should_steal(self, starting_pit, last_pit):
@@ -115,7 +115,6 @@ class Board:
         beans = self.pits[from_index]
         self.pits[from_index] = 0
         beans += self.pits[opposite]
-        # log.info(f"stealing {beans} beans from {opposite} because {from_index} ")
         self.pits[opposite] = 0
         self.pits[players_pit] += beans
 
@@ -170,11 +169,9 @@ class Board:
         """
         if self.no_more_moves():
             for pi in range(self.playerA_pit_index):
-                # log.info(f"{self.pits[self.playerA_pit_index]} += {self.pits[pi]}")
                 self.pits[self.playerA_pit_index] += self.pits[pi]
                 self.pits[pi] = 0
             for pi in range(self.playerA_pit_index + 1, self.playerB_pit_index):
-                # log.info(f"{self.pits[self.playerB_pit_index]} += {self.pits[pi]}")
                 self.pits[self.playerB_pit_index] += self.pits[pi]
                 self.pits[pi] = 0
 

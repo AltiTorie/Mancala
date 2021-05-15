@@ -9,10 +9,27 @@ from src.player import Player
 class MinMax(Algorithm):
     moves_count: int = 0
 
-    @lru_cache()
+    def __init__(self):
+        self.__player = None
+
     def run(self, state: Board, depth: int, is_max: bool, player: Player):
         """
-        Get next best or worst state for given state depending on specified parameters.
+        Get next best or worst state for given state based on specified parameters.
+
+        :param state: Board state from which algorithm will start looking for best/worst move.
+        :param depth: Maximum depth that will be visited.
+        :param is_max: Whether MinMax should maximize the outcome or minimize it.
+        :param player: Player whose "turn" is currently.
+        :return: Tuple containing information whether next move gives additional move and next move itself.
+        """
+        self.__player = player
+        _, additional_move, board = self.__calculate(state, depth, is_max, player)
+        return additional_move, board
+
+    @lru_cache()
+    def __calculate(self, state: Board, depth: int, is_max: bool, player: Player):
+        """
+        Helper function to get next best or worst state for given state based on specified parameters.
 
         :param state: Board state from which algorithm will start looking for best/worst move.
         :param depth: Maximum depth that will be visited.
@@ -21,7 +38,7 @@ class MinMax(Algorithm):
         :return: Tuple containing information whether next move gives additional move and next move itself.
         """
         if depth == 0 or state.no_more_moves():
-            return False, state
+            return Evaluator.rate_board_state(state, self.__player), False, state
         additional_move = False
         best_board = state
         moves = state.calculate_possible_states(player)
@@ -30,21 +47,19 @@ class MinMax(Algorithm):
             value = -float('inf')
             for add_move, move in moves:
                 if add_move:
-                    _, deep_state = self.run(move, depth - 1, True, player)
+                    new_value, _, _ = self.__calculate(move, depth - 1, True, player)
                 else:
-                    _, deep_state = self.run(move, depth - 1, False, player.next())
-                new_value = Evaluator.rate_board_state(deep_state, player)
+                    new_value, _, _ = self.__calculate(move, depth - 1, False, player.next())
                 if new_value > value:
                     additional_move, value, best_board = add_move, new_value, move
-            return additional_move, best_board
+            return value, additional_move, best_board
         else:
             value = float('inf')
             for add_move, move in moves:
                 if add_move:
-                    _, deep_state = self.run(move, depth - 1, False, player)
+                    new_value, _, _ = self.__calculate(move, depth - 1, False, player)
                 else:
-                    _, deep_state = self.run(move, depth - 1, True, player.next())
-                new_value = Evaluator.rate_board_state(deep_state, player)
+                    new_value, _, _ = self.__calculate(move, depth - 1, True, player.next())
                 if new_value < value:
                     additional_move, value, best_board = add_move, new_value, move
-            return additional_move, best_board
+            return value, additional_move, best_board
