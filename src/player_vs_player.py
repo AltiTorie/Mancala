@@ -11,6 +11,7 @@ if __name__ == '__main__':
     depth = 6
     beans_per_pit = 4
     first_move_random = True
+    # choose starting player:
     player = random.choice([p for p in Player])
     # player = Player.A
     # player = Player.B

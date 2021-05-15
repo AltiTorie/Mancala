@@ -13,12 +13,10 @@ class Evaluator:
         :param player: Player whose beans will be counted.
         :return: Number of beans in the given player pit.
         """
+        b = board.deep_copy()
+        if board.no_more_moves():
+            b.clean_board()
         if player is Player.A:
-            return board.get_state()[board.playerA_pit_index] - board.get_state()[board.playerB_pit_index]
+            return b.get_state()[b.playerA_pit_index] - b.get_state()[b.playerB_pit_index]
         else:
-            return board.get_state()[board.playerB_pit_index] - board.get_state()[board.playerA_pit_index]
-        #
-        # if player is Player.A:
-        #     return board.get_state()[board.playerA_pit_index]
-        # else:
-        #     return board.get_state()[board.playerB_pit_index]
+            return b.get_state()[b.playerB_pit_index] - b.get_state()[b.playerA_pit_index]
