@@ -1,13 +1,13 @@
-from src.board import Board
+from src.evaluation.evaluator import Evaluator
 from src.player import Player
 
 
-class Evaluator:
+class StoreEvaluator(Evaluator):
 
     @staticmethod
-    def rate_board_state(board: Board, player: Player):
+    def rate_board_state(board, player):
         """
-        Rates board state based on how many beans there are in given players pit.
+        Rates board state based on the amount of beans in the given players store.
 
         :param board: Current state of the Board to be rated.
         :param player: Player whose beans will be counted.

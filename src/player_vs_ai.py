@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from src.algorithm.alphabeta import AlphaBeta
 from src.algorithm.minmax import MinMax
 from src.board import Board
+from src.evaluation.store_evaluator import StoreEvaluator
 from src.player import Player
 
 logging.basicConfig(level=logging.INFO)
@@ -22,8 +23,8 @@ if __name__ == '__main__':
     # player = Player.B
     #
     # choose algorithm:
-    algorithm = AlphaBeta()
-    # algorithm = MinMax()
+    algorithm = AlphaBeta(StoreEvaluator())
+    # algorithm = MinMax(StoreEvaluator())
     ###
 
     board = Board(beans_per_pit=beans_per_pit)
@@ -52,7 +53,7 @@ if __name__ == '__main__':
     board.print_state()
 
     logging.info(f"The winner is player{board.log_winner()}")
-    logging.info(f"The game took: {time.time()-start}")
+    logging.info(f"The game took: {time.time() - start}")
     logging.info(f'b_moves: {moves[Player.B]}')
     plt.plot(moves[Player.B])
     plt.show()
