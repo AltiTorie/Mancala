@@ -177,18 +177,14 @@ class Board:
 
     def log_winner(self):
         """
-        Winner for the current state of the board
-        :return: Player who has more beans in his store
+        Log winner for the current state of the board
         """
         if self.pits[self.playerA_pit_index] > self.pits[self.playerB_pit_index]:
             log.info(f"The winner is: {Player.A}")
-            return Player.A
         elif self.pits[self.playerA_pit_index] == self.pits[self.playerB_pit_index]:
             log.info(f"It's a tie!")
-            return None
         else:
             log.info(f"The winner is: {Player.B}")
-            return Player.B
 
     def calculate_possible_states(self, player: Player):
         """
@@ -214,3 +210,15 @@ class Board:
                     am = next_move.spread_beans(i + cp.playerA_pit_index + 1, player)
                     moves.append((am, next_move))
         return moves
+
+    def get_winner(self):
+        """
+        Winner for the current state of the board
+        :return: Player who has more beans in his store
+        """
+        if self.pits[self.playerA_pit_index] > self.pits[self.playerB_pit_index]:
+            return Player.A
+        elif self.pits[self.playerA_pit_index] == self.pits[self.playerB_pit_index]:
+            return None
+        else:
+            return Player.B
