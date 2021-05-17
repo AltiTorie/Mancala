@@ -47,6 +47,19 @@ Na chwilę obecną można zmiennymi parametrami są:
 - depth (głębokość drzewa przeszukiwań) domyślnie 6.
 - first_move_random - czy pierwszy ruch komputera ma być losowy (dostępne tylko w trybie [komputer vs komputer](src/ai_vs_ai.py)).
 - player - pozwala na ustawienie losowego gracza rozpoczynającego lub na ustawienie wybranego.
+- algorithm - algorytm używany przez komputer do wybrania kolejnego ruchu
+
+## Algorytmy wyboru
+Aktualnie dostępne algorytmy wybierające następny ruch komputera:
+- MinMax
+- AlphaBeta pruning
+
+Dla większych głębokości przeszukiwań algorytmy znacząco różnią się szybkością działania:  
+![](src/charts/avg_times.png)  
+
+oraz ilością odwiedzonych stanów:  
+![](src/charts/visited_states.png)
+
 
 ## Testy funkcjonalne
 Komputer potrafi wykryć następujące sytuacje (przy ustawionej odpowiedniej wartości depth):
