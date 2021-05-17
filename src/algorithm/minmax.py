@@ -2,15 +2,16 @@ from functools import lru_cache
 
 from src.algorithm.algorithm import Algorithm
 from src.board import Board
-from src.evaluator import Evaluator
+from src.evaluation.evaluator import Evaluator
 from src.player import Player
 
 
 class MinMax(Algorithm):
     moves_count: int = 0
 
-    def __init__(self):
+    def __init__(self, evaluator: Evaluator):
         self.__player = None
+        self.evaluator = evaluator
 
     def run(self, state: Board, depth: int, is_max: bool, player: Player):
         """
@@ -38,7 +39,7 @@ class MinMax(Algorithm):
         :return: Tuple containing information whether next move gives additional move and next move itself.
         """
         if depth == 0 or state.no_more_moves():
-            return Evaluator.rate_board_state(state, self.__player), False, state
+            return self.evaluator.rate_board_state(state, self.__player), False, state
         additional_move = False
         best_board = state
         moves = state.calculate_possible_states(player)
