@@ -7,7 +7,7 @@ class StoreEvaluator(Evaluator):
     @staticmethod
     def rate_board_state(board, player):
         """
-        Rates board state based on the amount of beans in the given players store.
+        Rate board state based on the amount of beans in the given players store.
 
         :param board: Current state of the Board to be rated.
         :param player: Player whose beans will be counted.
