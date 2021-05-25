@@ -78,10 +78,10 @@ class Board:
         for index in range(pos, starting_pit + beans_to_spread + 1):
             self.pits[index % self.pits_len] += 1
 
-        if was_zero and self.__should_steal(pos, last_pos):
-            self.__steal_beans(last_pos)
+        if was_zero and self.can_steal(pos, last_pos):
+            self.steal_beans(last_pos)
 
-        add_move = self.__additional_move(starting_pit, last_pos)
+        add_move = self.additional_move(starting_pit, last_pos)
 
         if self.print_after_move:
             self.print_state()
@@ -89,7 +89,7 @@ class Board:
                 log.info("Player has another move!")
         return add_move
 
-    def __should_steal(self, starting_pit, last_pit):
+    def can_steal(self, starting_pit, last_pit):
         """
         Detect if last bean landed on empty players pit.
 
@@ -97,28 +97,28 @@ class Board:
         :param last_pit: index of a pit where last bean landed
         :return: last bin on empty players pit
         """
-        opposite_pit_beans = self.pits[self.__opposite_pit_index(last_pit)]
+        opposite_pit_beans = self.pits[self.opposite_pit_index(last_pit)]
         if starting_pit < self.playerA_pit_index and last_pit % self.pits_len < self.playerA_pit_index and opposite_pit_beans > 0:
             return True
         if starting_pit > self.playerA_pit_index and last_pit % self.pits_len > self.playerA_pit_index and opposite_pit_beans > 0:
             return True
         return False
 
-    def __steal_beans(self, from_index):
+    def steal_beans(self, from_index):
         """
         Move beans from pit at `from_index` to corresponding player store.
 
         :param from_index: index of a pit from beans will be moved
         """
-        opposite = self.__opposite_pit_index(from_index)
-        players_pit = self.__players_pit_index(from_index)
+        opposite = self.opposite_pit_index(from_index)
+        players_pit = self.players_pit_index(from_index)
         beans = self.pits[from_index]
         self.pits[from_index] = 0
         beans += self.pits[opposite]
         self.pits[opposite] = 0
         self.pits[players_pit] += beans
 
-    def __additional_move(self, starting_pit, last_pit):
+    def additional_move(self, starting_pit, last_pit):
         """
         Detects if last bean landed on players store
 
@@ -132,7 +132,7 @@ class Board:
             return True
         return False
 
-    def __players_pit_index(self, index):
+    def players_pit_index(self, index):
         """
         Find index of a players store whose pit's `index` was given.
 
@@ -141,12 +141,12 @@ class Board:
         """
         return self.playerA_pit_index if index <= self.playerA_pit_index else self.playerB_pit_index
 
-    def __opposite_pit_index(self, index):
+    def opposite_pit_index(self, index):
         """
         :param index: index of a pit
         :return: index of an opposing pit
         """
-        pit = self.__players_pit_index(index)
+        pit = self.players_pit_index(index)
         return (pit + (pit - index)) % self.pits_len
 
     def no_more_moves(self):
@@ -174,6 +174,18 @@ class Board:
             for pi in range(self.playerA_pit_index + 1, self.playerB_pit_index):
                 self.pits[self.playerB_pit_index] += self.pits[pi]
                 self.pits[pi] = 0
+
+    def get_players_pits_indexes(self, player):
+        """
+        Get tuple containing first players pit index and index of his store.
+
+        :param player: player whose pits range shall be counted
+        :return: Tuple containing indexes of first pit and players store
+        """
+        if player is Player.A:
+            return 0, self.playerA_pit_index
+        else:
+            return self.playerA_pit_index + 1, self.playerB_pit_index
 
     def log_winner(self):
         """
