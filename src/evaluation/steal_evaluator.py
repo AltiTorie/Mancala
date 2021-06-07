@@ -32,6 +32,6 @@ class StealEvaluator(Evaluator):
         b: Board = board.deep_copy()
 
         player_beans = calculate_max_stolen_beans(b, player)
-        # enemy_beans = calculate_max_stolen_beans(b, player.next())
+        enemy_beans = calculate_max_stolen_beans(b, player.next())
 
-        return player_beans
+        return player_beans - enemy_beans
